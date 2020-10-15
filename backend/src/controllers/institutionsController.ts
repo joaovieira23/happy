@@ -6,7 +6,17 @@ export default {
   async index(req: Request, res: Response) {
     const institutionRepository = getRepository(Institution);
 
-    const institution = await institutionRepository.find();
+    const institutions = await institutionRepository.find();
+
+    return res.json(institutions);
+  },
+
+  async show(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const institutionRepository = getRepository(Institution);
+
+    const institution = await institutionRepository.findOneOrFail(id);
 
     return res.json(institution);
   },
