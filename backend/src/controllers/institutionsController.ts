@@ -22,6 +22,8 @@ export default {
   },
 
   async create(req: Request, res: Response) {
+    console.log(req.files);
+
     const {
       name,
       latitude,
@@ -34,6 +36,11 @@ export default {
 
     const institutionRepository = getRepository(Institution);
 
+    const requestImages = req.files as Express.Multer.File[];
+    const images = requestImages.map(image => {
+      return { path: image.filename }
+    })
+
     const institution = institutionRepository.create({
       name,
       latitude,
@@ -41,7 +48,8 @@ export default {
       about,
       instructions,
       opening_hours,
-      open_on_weekends
+      open_on_weekends,
+      images
     });
 
     await institutionRepository.save(institution);

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import Institution from './Institution';
 
 @Entity('images')
@@ -9,7 +9,7 @@ export default class Image {
   @Column()
   path: string;
 
-  @ManyToMany(() => Institution, institution => institution.images)
+  @ManyToOne(() => Institution, institution => institution.images)
   @JoinColumn({ name: 'institution_id' })
   institution: Institution;
 }
