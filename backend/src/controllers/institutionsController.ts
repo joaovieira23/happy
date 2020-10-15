@@ -3,6 +3,14 @@ import { getRepository } from 'typeorm';
 import Institution from '../models/Institution';
 
 export default {
+  async index(req: Request, res: Response) {
+    const institutionRepository = getRepository(Institution);
+
+    const institution = await institutionRepository.find();
+
+    return res.json(institution);
+  },
+
   async create(req: Request, res: Response) {
     const {
       name,
