@@ -1,19 +1,22 @@
-import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
+import React, { useState, FormEvent, ChangeEvent } from "react";
 import { Map, Marker, TileLayer } from 'react-leaflet';
-import { LeafletMouseEvent } from 'leaflet';
+import { LeafletMouseEvent, } from 'leaflet';
+import { useHistory } from "react-router-dom";
 
 import { FiPlus } from "react-icons/fi";
 
 import '../styles/pages/create-institution.css';
 import Sidebar from "../components/Sidebar";
 import mapIcon from "../utils/mapIcon";
+import api from "../services/api";
 
 export default function CreateInstitution() {
+  const history = useHistory();
   const [position, setPosition] = useState({ latitude: 0, longitude: 0 });
 
   const [name, setName] = useState('');
   const [about, setAbout] = useState('');
-  const [instuctions, setInstuctions] = useState('');
+  const [instructions, setInstructions] = useState('');
   const [opening_hours, setOpeningHours] = useState('');
   const [open_on_weekends, setOpenOnWeekends] = useState(true);
   const [images, setImages] = useState<File[]>([]);
@@ -27,21 +30,40 @@ export default function CreateInstitution() {
     });
   }
 
-  function handleSubmit(event: FormEvent) {
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
     const { latitude, longitude } = position;
 
-    console.log({
-      name,
-      about,
-      latitude,
-      longitude,
-      instuctions,
-      opening_hours,
-      open_on_weekends,
-      images
+    const data = new FormData();
+
+    data.append('name', name);
+    data.append('about', about);
+    data.append('latitude', String(latitude));
+    data.append('longitude', String(longitude));
+    data.append('instructions', instructions);
+    data.append('opening_hours', opening_hours);
+    data.append('open_on_weekends', String(open_on_weekends));
+    images.forEach(image => {
+      data.append('images', image);
     });
+
+    await api.post('institution', data);
+
+    alert('Cadastro realizado com sucesso');
+
+    history.push('/app');
+
+    // console.log({
+    //   name,
+    //   about,
+    //   latitude,
+    //   longitude,
+    //   instuctions,
+    //   opening_hours,
+    //   open_on_weekends,
+    //   images
+    // });
   }
 
   function handleSelectImages(event: ChangeEvent<HTMLInputElement>) {
@@ -67,7 +89,7 @@ export default function CreateInstitution() {
             <legend>Dados</legend>
 
             <Map
-              center={[-27.2092052, -49.6401092]}
+              center={[-23.749716, -46.5837066]}
               style={{ width: '100%', height: 280 }}
               zoom={15}
               onClick={handleMapClick}
@@ -130,8 +152,8 @@ export default function CreateInstitution() {
               <label htmlFor="instructions">Instruções</label>
               <textarea
                 id="instructions"
-                value={instuctions}
-                onChange={e => setInstuctions(e.target.value)}
+                value={instructions}
+                onChange={e => setInstructions(e.target.value)}
               />
             </div>
 
