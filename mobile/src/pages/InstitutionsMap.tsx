@@ -1,17 +1,22 @@
 import React from 'react';
 
-import { StyleSheet, Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps'
 import { Feather } from '@expo/vector-icons';
 
 import mapMarker from '../images/map-marker.png';
 import { useNavigation } from '@react-navigation/native';
+import { RectButton } from 'react-native-gesture-handler';
 
 export default function InstitutionMap() {
   const navigation = useNavigation();
 
   function handleNavigateToInstitutionDetails() {
     navigation.navigate('InstitutionDetails');
+  }
+
+  function handleNavigateToCreateInstitution() {
+    navigation.navigate('SelectMapPosition');
   }
 
   return (
@@ -48,9 +53,9 @@ export default function InstitutionMap() {
       <View style={styles.footer}>
         <Text style={styles.footerText}>2 instituições encontradas</Text>
 
-        <TouchableOpacity style={styles.createInstitutionButton} onPress={() => { }}>
+        <RectButton style={styles.createInstitutionButton} onPress={handleNavigateToCreateInstitution}>
           <Feather name="plus" size={20} color="#FFF" />
-        </TouchableOpacity>
+        </RectButton>
       </View>
     </View>
   );
